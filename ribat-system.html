@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام مجموعة رباط الخدمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12172B;
+    --ink-soft:#4A5170;
+    --blue:#2F4BD6;
+    --blue-deep:#1E33A8;
+    --blue-mist:#EBEFFC;
+    --bg:#F5F6FA;
+    --card:#FFFFFF;
+    --line:#E4E7F2;
+    --green:#1E9E6B;
+    --green-bg:#E6F6EF;
+    --amber:#C8842A;
+    --amber-bg:#FBF0DF;
+    --red:#D24545;
+    --red-bg:#FCEAEA;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--ink);}
+  ::selection{background:var(--blue);color:#fff;}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+
+  /* ---------- Login ---------- */
+  #login-screen{
+    position:fixed;inset:0;background:linear-gradient(160deg,#12172B 0%,#1E2A5E 55%,#2F4BD6 130%);
+    display:flex;align-items:center;justify-content:center;z-index:100;
+  }
+  .login-card{
+    background:rgba(255,255,255,0.98);border-radius:24px;padding:44px 40px;width:380px;max-width:90vw;
+    text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.35);
+  }
+  .knot{width:78px;height:78px;margin:0 auto 14px;}
+  .brand-en{font-family:'Poppins',sans-serif;font-weight:700;color:var(--blue);letter-spacing:.5px;font-size:13px;text-transform:uppercase;}
+  .brand-ar{font-weight:900;font-size:22px;margin-top:2px;color:var(--ink);}
+  .login-sub{color:var(--ink-soft);font-size:13.5px;margin:18px 0 20px;}
+  .user-pick{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .user-btn{
+    border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:13px 16px;
+    font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:space-between;
+    transition:.15s;
+  }
+  .user-btn:hover{border-color:var(--blue);background:var(--blue-mist);}
+  .user-btn .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);}
+  .add-user-row{display:flex;gap:8px;margin-top:6px;}
+  .add-user-row input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;}
+  .add-user-row button{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:700;font-size:14px;}
+.login-hint{margin-top:12px;text-align:center;color:var(--ink-soft);font-size:11px;line-height:1.7;}
+
+  /* ---------- Shell ---------- */
+  #app{display:none;min-height:100vh;}
+  .shell{display:flex;min-height:100vh;}
+  .sidebar{
+    width:230px;flex-shrink:0;background:var(--ink);color:#fff;padding:22px 16px;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .side-logo{display:flex;align-items:center;gap:10px;padding:4px 6px 20px;}
+  .side-logo .knot{width:34px;height:34px;margin:0;}
+  .side-logo-text .brand-en{color:#8FA0F5;font-size:9.5px;}
+  .side-logo-text .brand-ar{color:#fff;font-size:15px;}
+  .nav-item{
+    display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;color:#B7BEDD;
+    font-size:14.5px;font-weight:700;border:none;background:none;text-align:right;width:100%;
+    transition:.15s;
+  }
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .nav-item:hover{background:rgba(255,255,255,0.06);color:#fff;}
+  .nav-item.active{background:var(--blue);color:#fff;}
+  .side-footer{margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,0.1);}
+  .side-user{display:flex;align-items:center;justify-content:space-between;padding:8px 6px;}
+  .side-user span{font-size:13.5px;font-weight:700;color:#fff;}
+  .switch-link{font-size:11.5px;color:#8FA0F5;background:none;border:none;padding:0;}
+
+  .main{flex:1;padding:26px 34px;max-width:1180px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+  .page-title{font-size:23px;font-weight:900;}
+  .page-sub{color:var(--ink-soft);font-size:13.5px;margin-top:3px;}
+  .btn{
+    border:none;border-radius:11px;padding:10px 18px;font-weight:700;font-size:13.5px;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .btn-primary{background:var(--blue);color:#fff;}
+  .btn-primary:hover{background:var(--blue-deep);}
+  .btn-ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+  .btn-sm{padding:6px 12px;font-size:12.5px;border-radius:8px;}
+  .btn-danger{background:var(--red-bg);color:var(--red);}
+
+  /* stat cards */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .stat-card{background:var(--card);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--line);}
+  .stat-label{font-size:12.5px;color:var(--ink-soft);font-weight:700;}
+  .stat-val{font-size:26px;font-weight:900;margin-top:6px;}
+  .stat-tag{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
+
+  .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--line);padding:20px;margin-bottom:18px;}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .card-head h3{font-size:15.5px;margin:0;font-weight:800;}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .filters select,.filters input{
+    border:1.5px solid var(--line);border-radius:9px;padding:8px 12px;font-size:13px;background:#fff;color:var(--ink);
+  }
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:right;color:var(--ink-soft);font-weight:700;font-size:12px;padding:9px 10px;border-bottom:1.5px solid var(--line);}
+  td{padding:11px 10px;border-bottom:1px solid var(--line);}
+  tr:last-child td{border-bottom:none;}
+  .pill{display:inline-block;padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:700;}
+  .pill-new{background:var(--blue-mist);color:var(--blue);}
+  .pill-progress{background:var(--amber-bg);color:var(--amber);}
+  .pill-confirmed{background:var(--green-bg);color:var(--green);}
+  .pill-cancelled{background:var(--red-bg);color:var(--red);}
+  .pill-paid{background:var(--green-bg);color:var(--green);}
+  .pill-unpaid{background:var(--red-bg);color:var(--red);}
+  .pill-partial{background:var(--amber-bg);color:var(--amber);}
+  .row-actions{display:flex;gap:6px;}
+  .icon-btn{background:none;border:none;color:var(--ink-soft);padding:5px;border-radius:7px;}
+  .icon-btn:hover{background:var(--blue-mist);color:var(--blue);}
+  .empty{padding:34px 10px;text-align:center;color:var(--ink-soft);font-size:13.5px;}
+
+  /* services grid */
+  .cat-tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .cat-tab{border:1.5px solid var(--line);background:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;color:var(--ink-soft);}
+  .cat-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .svc-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;position:relative;}
+  .svc-cat{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.4px;}
+  .svc-name{font-size:15.5px;font-weight:800;margin:6px 0 4px;}
+  .svc-desc{font-size:12.5px;color:var(--ink-soft);min-height:32px;}
+  .svc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);}
+  .svc-price{font-weight:900;font-size:16px;}
+  .svc-price span{font-size:11px;font-weight:700;color:var(--ink-soft);}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(18,23,43,0.5);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:50;}
+  .overlay.show{display:flex;}
+  .modal{background:#fff;border-radius:18px;width:520px;max-width:100%;padding:26px;}
+  .modal h3{margin:0 0 16px;font-size:17px;font-weight:900;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:5px;}
+  .field input,.field select,.field textarea{
+    width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px;background:#fbfbfd;
+  }
+  .field textarea{resize:vertical;min-height:60px;}
+  .field-row{display:flex;gap:10px;}
+  .field-row .field{flex:1;}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:18px;}
+
+  .invoice-print{display:none;}
+  @media print{
+    body *{visibility:hidden;}
+    #invoice-print,#invoice-print *{visibility:visible;}
+    #invoice-print{position:fixed;inset:0;background:#fff;padding:30px;}
+  }
+
+  @media (max-width:900px){
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .svc-grid{grid-template-columns:repeat(2,1fr);}
+    .sidebar{position:fixed;bottom:0;top:auto;width:100%;flex-direction:row;justify-content:space-around;padding:8px;z-index:10;}
+    .side-logo,.side-footer{display:none;}
+    .nav-item{flex-direction:column;font-size:10px;gap:3px;padding:6px 4px;}
+    .main{padding:16px;padding-bottom:80px;}
+  }
+  @media (max-width:600px){
+    .svc-grid{grid-template-columns:1fr;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+    .field-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login-screen">
+  <div class="login-card">
+    <svg class="knot" viewBox="0 0 100 100" fill="none">
+      <path d="M50 8C60 8 68 16 68 26C68 36 60 44 50 44C40 44 32 36 32 26C32 16 40 8 50 8Z" stroke="#2F4BD6" stroke-width="6"/>
+      <path d="M18 40C24 32 34 30 42 36C50 42 52 52 46 60C40 68 30 70 22 64C14 58 12 48 18 40Z" stroke="#2F4BD6" stroke-width="6"/>
+      <path d="M82 40C76 32 66 30 58 36C50 42 48 52 54 60C60 68 70 70 78 64C86 58 88 48 82 40Z" stroke="#2F4BD6" stroke-width="6"/>
+      <path d="M50 56C60 56 68 64 68 74C68 84 60 92 50 92C40 92 32 84 32 74C32 64 40 56 50 56Z" stroke="#2F4BD6" stroke-width="6"/>
+    </svg>
+    <div class="brand-en">Ribat Services Group</div>
+    <div class="brand-ar">مجموعة رباط الخدمية</div>
+    <div class="login-sub">أدخل اسم المستخدم وكلمة المرور للدخول</div>
+    <div class="field" style="margin-bottom:10px"><label>اسم المستخدم</label><input id="login-username" autocomplete="username" placeholder="مثال: admin"></div>
+    <div class="field" style="margin-bottom:12px"><label>كلمة المرور</label><input id="login-password" type="password" autocomplete="current-password" placeholder="كلمة المرور"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="loginWithPassword()">دخول النظام</button>
+    <div id="login-error" style="display:none;color:#b42318;background:#fff1f0;border-radius:10px;padding:9px 11px;margin-top:10px;font-size:13px"></div>
+    <div class="login-hint">الحساب الإداري الأول: <b>admin</b> — كلمة المرور الأولية: <b>123456</b></div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+<div class="shell">
+  <div class="sidebar">
+    <div class="side-logo">
+      <svg class="knot" viewBox="0 0 100 100" fill="none">
+        <path d="M50 8C60 8 68 16 68 26C68 36 60 44 50 44C40 44 32 36 32 26C32 16 40 8 50 8Z" stroke="#fff" stroke-width="7"/>
+        <path d="M18 40C24 32 34 30 42 36C50 42 52 52 46 60C40 68 30 70 22 64C14 58 12 48 18 40Z" stroke="#fff" stroke-width="7"/>
+        <path d="M82 40C76 32 66 30 58 36C50 42 48 52 54 60C60 68 70 70 78 64C86 58 88 48 82 40Z" stroke="#fff" stroke-width="7"/>
+        <path d="M50 56C60 56 68 64 68 74C68 84 60 92 50 92C40 92 32 84 32 74C32 64 40 56 50 56Z" stroke="#fff" stroke-width="7"/>
+      </svg>
+      <div class="side-logo-text">
+        <div class="brand-en">Ribat Services</div>
+        <div class="brand-ar">رباط الخدمية</div>
+      </div>
+    </div>
+
+    <button class="nav-item active" data-page="dashboard" onclick="goPage('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      لوحة التحكم
+    </button>
+    <button class="nav-item" data-page="clients" onclick="goPage('clients')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.3"/><path d="M3 21c0-4 2.7-6.5 6-6.5s6 2.5 6 6.5"/><circle cx="17.5" cy="8.5" r="2.4"/><path d="M15.5 14.3c2.9.2 5 2.6 5 6.2"/></svg>
+      العملاء والطلبات
+    </button>
+    <button class="nav-item" data-page="services" onclick="goPage('services')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6l9 4 9-4-9-4Z"/><path d="M3 12l9 4 9-4"/><path d="M3 18l9 4 9-4"/></svg>
+      الخدمات والأسعار
+    </button>
+    <button class="nav-item" data-page="invoices" onclick="goPage('invoices')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2.5" width="14" height="19" rx="1.5"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>
+      الفواتير والمدفوعات
+    </button>
+    <button class="nav-item" data-page="expenses" onclick="goPage('expenses')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>
+      المصروفات
+    </button>
+    <button class="nav-item" data-page="reports" onclick="goPage('reports')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      التقارير
+    </button>
+    <button class="nav-item" data-page="settings" onclick="goPage('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2-1.5-2-3.4-2.3.9a7.9 7.9 0 0 0-1.8-1L15 3.5h-4l-.3 2.5a7.9 7.9 0 0 0-1.8 1l-2.3-.9-2 3.4L6.6 11a7.7 7.7 0 0 0 0 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.8 1.8 1l.3 2.5h4l.3-2.5c.7-.2 1.3-.6 1.8-1l2.3.9 2-3.4-2-1.5Z"/></svg>
+      الإعدادات
+    </button>
+
+    <div class="side-footer">
+      <div class="side-user">
+        <span id="side-user-name">—</span>
+        <button class="switch-link" onclick="logout()">تبديل المستخدم</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- DASHBOARD -->
+    <div class="page" id="page-dashboard">
+      <div class="topbar">
+        <div><div class="page-title">لوحة التحكم</div><div class="page-sub">نظرة عامة على نشاط الشركة</div></div>
+        <button class="btn btn-primary" onclick="openOrderModal()">+ طلب جديد</button>
+      </div>
+      <div class="stats-row" id="stats-row"></div>
+      <div class="card">
+        <div class="card-head"><h3>أحدث الطلبات</h3><button class="btn btn-ghost btn-sm" onclick="goPage('clients')">عرض الكل</button></div>
+        <table><thead><tr><th>العميل</th><th>الخدمة</th><th>الوجهة</th><th>الحالة</th><th>القيمة</th></tr></thead>
+        <tbody id="recent-orders-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="page" id="page-clients" style="display:none">
+      <div class="topbar">
+        <div><div class="page-title">العملاء والطلبات</div><div class="page-sub">إدارة طلبات السفر والسياحة والدراسة</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="openClientModal()">+ عميل جديد</button>
+          <button class="btn btn-primary" onclick="openOrderModal()">+ طلب جديد</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="filters">
+          <input id="f-search" placeholder="بحث بالاسم أو رقم الهاتف..." oninput="renderOrders()">
+          <select id="f-type" onchange="renderOrders()">
+            <option value="">كل الخدمات</option>
+            <option value="سفر">سفر</option>
+            <option value="سياحة">سياحة</option>
+            <option value="دراسة">دراسة</option>
+          </select>
+          <select id="f-country" onchange="renderOrders()">
+            <option value="">كل الوجهات</option>
+            <option value="رواندا">رواندا</option>
+            <option value="الهند">الهند</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+          <select id="f-status" onchange="renderOrders()">
+            <option value="">كل الحالات</option>
+            <option value="جديد">جديد</option>
+            <option value="قيد المعالجة">قيد المعالجة</option>
+            <option value="مؤكد">مؤكد</option>
+            <option value="ملغي">ملغي</option>
+          </select>
+        </div>
+        <table><thead><tr><th>العميل</th><th>الهاتف</th><th>الخدمة</th><th>الوجهة</th><th>الحالة</th><th>القيمة</th><th></th></tr></thead>
+        <tbody id="orders-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="page" id="page-services" style="display:none">
+      <div class="topbar">
+        <div><div class="page-title">الخدمات والأسعار</div><div class="page-sub">كتالوج خدمات السفر والسياحة والدراسة</div></div>
+        <button class="btn btn-primary" onclick="openServiceModal()">+ خدمة جديدة</button>
+      </div>
+      <div class="cat-tabs" id="svc-cat-tabs"></div>
+      <div class="svc-grid" id="svc-grid"></div>
+    </div>
+
+    <!-- INVOICES -->
+    <div class="page" id="page-invoices" style="display:none">
+      <div class="topbar">
+        <div><div class="page-title">الفواتير والمدفوعات</div><div class="page-sub">إصدار ومتابعة فواتير العملاء</div></div>
+        <button class="btn btn-primary" onclick="openInvoiceModal()">+ فاتورة جديدة</button>
+      </div>
+      <div class="card">
+        <table><thead><tr><th>رقم</th><th>العميل</th><th>الوصف</th><th>الإجمالي</th><th>الحالة</th><th>التاريخ</th><th></th></tr></thead>
+        <tbody id="invoices-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="page" id="page-expenses" style="display:none">
+      <div class="topbar">
+        <div><div class="page-title">المصروفات</div><div class="page-sub">تسجيل ومتابعة مصروفات الشركة</div></div>
+        <button class="btn btn-primary" onclick="openExpenseModal()">+ مصروف جديد</button>
+      </div>
+      <div class="card">
+        <table><thead><tr><th>البيان</th><th>التصنيف</th><th>القيمة</th><th>التاريخ</th><th>المستخدم</th><th></th></tr></thead>
+        <tbody id="expenses-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="page" id="page-reports" style="display:none">
+      <div class="topbar">
+        <div><div class="page-title">التقارير</div><div class="page-sub">أداء الشركة حسب نوع الخدمة</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>الإيرادات حسب نوع الخدمة (من الفواتير المدفوعة)</h3></div>
+        <div id="report-bars"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>ملخص عام</h3></div>
+        <div class="stats-row" id="report-stats"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings" style="display:none">
+      <div class="topbar">
+        <div><div class="page-title">الإعدادات</div><div class="page-sub">المستخدمون ونسخ البيانات الاحتياطية</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>فريق العمل والصلاحيات</h3></div>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.9;margin-top:0">أضف أعضاء فريقك وحدد دور كل مستخدم. المدير يملك كل الصلاحيات، ويمكن تخصيص الصلاحيات للمستخدمين.</p>
+        <div id="users-list"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="openUserModal()">+ إضافة مستخدم</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>نسخ البيانات احتياطياً</h3></div>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.9;margin-top:0">
+          البيانات محفوظة على هذا الجهاز فقط. لمشاركة نفس البيانات بين المستخدمين التلاتة على أجهزة مختلفة،
+          صدّر نسخة من هذا الجهاز واستوردها على الجهاز التاني بعد كل تحديث مهم.
+        </p>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="exportData()">⬇ تصدير نسخة احتياطية</button>
+          <label class="btn btn-ghost" style="position:relative">
+            ⬆ استيراد نسخة
+            <input type="file" accept=".json" onchange="importData(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+          </label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>بيانات الشركة</h3></div>
+        <div class="field-row">
+          <div class="field"><label>اسم الشركة</label><input id="set-company" value="مجموعة رباط الخدمية"></div>
+          <div class="field"><label>العملة الأساسية</label>
+            <select id="set-currency"><option value="USD">دولار (USD)</option><option value="EGP">جنيه مصري (EGP)</option><option value="SAR">ريال سعودي (SAR)</option></select>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="saveCompanySettings()">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="overlay" id="overlay-client">
+  <div class="modal">
+    <h3 id="client-modal-title">عميل جديد</h3>
+    <input type="hidden" id="client-id">
+    <div class="field"><label>الاسم الكامل</label><input id="client-name"></div>
+    <div class="field-row">
+      <div class="field"><label>رقم الهاتف</label><input id="client-phone"></div>
+      <div class="field"><label>البريد الإلكتروني</label><input id="client-email"></div>
+    </div>
+    <div class="field"><label>ملاحظات</label><textarea id="client-notes"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveClient()">حفظ</button>
+      <button class="btn btn-ghost" onclick="closeModal('overlay-client')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-order">
+  <div class="modal">
+    <h3 id="order-modal-title">طلب جديد</h3><input type="hidden" id="order-id">
+    <div class="field">
+      <label>العميل</label>
+      <select id="order-client"></select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>نوع الخدمة</label>
+        <select id="order-type"><option>سفر</option><option>سياحة</option><option>دراسة</option></select>
+      </div>
+      <div class="field"><label>الوجهة</label>
+        <select id="order-country"><option>رواندا</option><option>الهند</option><option>أخرى</option></select>
+      </div>
+    </div>
+    <div class="field"><label>تفاصيل الطلب</label><textarea id="order-details"></textarea></div>
+    <div class="field-row">
+      <div class="field"><label>القيمة</label><input id="order-price" type="number" placeholder="0"></div>
+      <div class="field"><label>الحالة</label>
+        <select id="order-status"><option>جديد</option><option>قيد المعالجة</option><option>مؤكد</option><option>ملغي</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveOrder()">حفظ الطلب</button>
+      <button class="btn btn-ghost" onclick="closeModal('overlay-order')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-service">
+  <div class="modal">
+    <h3>خدمة جديدة</h3>
+    <div class="field-row">
+      <div class="field"><label>التصنيف</label>
+        <select id="svc-cat"><option>سفر</option><option>سياحة</option><option>دراسة</option></select>
+      </div>
+      <div class="field"><label>الوجهة</label>
+        <select id="svc-country"><option>رواندا</option><option>الهند</option><option>عام</option></select>
+      </div>
+    </div>
+    <div class="field"><label>اسم الخدمة</label><input id="svc-name"></div>
+    <div class="field"><label>الوصف</label><textarea id="svc-desc"></textarea></div>
+    <div class="field-row">
+      <div class="field"><label>السعر</label><input id="svc-price" type="number"></div>
+      <div class="field"><label>العملة</label>
+        <select id="svc-currency"><option>USD</option><option>EGP</option><option>SAR</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveService()">حفظ الخدمة</button>
+      <button class="btn btn-ghost" onclick="closeModal('overlay-service')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-expense">
+  <div class="modal">
+    <h3>مصروف جديد</h3>
+    <div class="field"><label>البيان</label><input id="exp-desc" placeholder="مثال: مواصلات / إيجار / اتصالات"></div>
+    <div class="field-row">
+      <div class="field"><label>التصنيف</label><select id="exp-cat"><option>تشغيل</option><option>مواصلات</option><option>رواتب</option><option>إيجار</option><option>تسويق</option><option>أخرى</option></select></div>
+      <div class="field"><label>القيمة</label><input id="exp-total" type="number" min="0"></div>
+    </div>
+    <div class="field"><label>العملة</label><select id="exp-currency"><option>USD</option><option>SDG</option><option>EGP</option><option>SAR</option></select></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveExpense()">حفظ المصروف</button><button class="btn btn-ghost" onclick="closeModal('overlay-expense')">إلغاء</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-user">
+  <div class="modal">
+    <h3 id="user-modal-title">إضافة مستخدم</h3>
+    <input type="hidden" id="user-id">
+    <div class="field-row"><div class="field"><label>اسم المستخدم</label><input id="user-name"></div><div class="field"><label>اسم الدخول</label><input id="user-username" placeholder="مثال: ahmed" autocomplete="off"></div></div>
+    <div class="field"><label>كلمة المرور <small id="user-password-note" style="color:var(--ink-soft)"></small></label><input id="user-password" type="password" placeholder="اتركها فارغة عند التعديل للإبقاء على القديمة" autocomplete="new-password"></div>
+    <div class="field"><label>الدور</label><select id="user-role" onchange="applyRolePermissions()"><option value="admin">مدير</option><option value="sales">مبيعات</option><option value="operations">تشغيل</option><option value="accountant">محاسب</option><option value="viewer">مشاهدة فقط</option><option value="custom">مخصص</option></select></div>
+    <div class="field"><label>الصلاحيات</label><div class="perm-grid" id="user-perms"></div></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveUser()">حفظ المستخدم</button><button class="btn btn-ghost" onclick="closeModal('overlay-user')">إلغاء</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-invoice">
+  <div class="modal">
+    <h3>فاتورة جديدة</h3>
+    <div class="field"><label>العميل</label><select id="inv-client"></select></div>
+    <div class="field"><label>الوصف / الخدمة</label><input id="inv-desc"></div>
+    <div class="field-row">
+      <div class="field"><label>الإجمالي</label><input id="inv-total" type="number"></div>
+      <div class="field"><label>المدفوع</label><input id="inv-paid" type="number" min="0" value="0"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>العملة</label><select id="inv-currency"><option>USD</option><option>SDG</option><option>EGP</option><option>SAR</option></select></div>
+      <div class="field"><label>الحالة</label>
+        <select id="inv-status"><option value="unpaid">غير مدفوعة</option><option value="partial">مدفوعة جزئياً</option><option value="paid">مدفوعة</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveInvoice()">حفظ الفاتورة</button>
+      <button class="btn btn-ghost" onclick="closeModal('overlay-invoice')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="invoice-print" class="invoice-print"></div>
+
+<script>
+/* ============ DATA LAYER (localStorage) ============ */
+const DB_KEY = 'ribat_db_v1';
+const API_BASE = '';
+let SERVER_TOKEN = sessionStorage.getItem('ribat_server_token') || '';
+let SERVER_ONLINE = false;
+function loadDB(){
+  let db = JSON.parse(localStorage.getItem(DB_KEY) || 'null');
+  if(!db){
+    db = {
+      company:{name:'مجموعة رباط الخدمية', currency:'USD'},
+      users:[{id:cid(),name:'المدير',username:'admin',role:'admin',permissions:null,passwordHash:null}],
+      clients:[],
+      orders:[],
+      services:[
+        {id:cid(), cat:'دراسة', country:'رواندا', name:'التسجيل الجامعي + التأشيرة الدراسية', desc:'متابعة كاملة من القبول حتى السفر', price:450, currency:'USD'},
+        {id:cid(), cat:'دراسة', country:'الهند', name:'برنامج القبول الجامعي', desc:'اختيار الجامعة والتقديم والمتابعة', price:400, currency:'USD'},
+        {id:cid(), cat:'سفر', country:'رواندا', name:'حجز تذاكر الطيران', desc:'حجز وإصدار تذاكر ذهاب وعودة', price:60, currency:'USD'},
+        {id:cid(), cat:'سياحة', country:'الهند', name:'باقة سياحية أسبوعية', desc:'إقامة + مواصلات + برنامج سياحي', price:650, currency:'USD'},
+      ],
+      invoices:[],
+      expenses:[],
+    };
+    saveDB(db);
+  }
+  return db;
+}
+async function saveDB(db){
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+  if(!SERVER_TOKEN) return;
+  try{
+    const res=await fetch(API_BASE+'/api/state',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SERVER_TOKEN},body:JSON.stringify({state:db})});
+    if(res.status===401){ SERVER_TOKEN=''; sessionStorage.removeItem('ribat_server_token'); alert('انتهت جلسة النظام، يرجى تسجيل الدخول مرة أخرى'); location.reload(); return; }
+    const data=await res.json();
+    if(data.state){ DB=data.state; localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+    SERVER_ONLINE=res.ok;
+  }catch(e){ SERVER_ONLINE=false; console.warn('تعذر مزامنة البيانات مع الخادم',e); }
+}
+function cid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+let DB = loadDB();
+
+/* ============ USERS / PERMISSIONS / LOGIN ============ */
+const PERMISSIONS = {
+  dashboard:'لوحة التحكم', clients_view:'عرض العملاء', clients_manage:'إدارة العملاء والطلبات', services_view:'عرض الخدمات', services_manage:'إدارة الخدمات والأسعار', invoices_view:'عرض الفواتير', invoices_manage:'إدارة الفواتير والمدفوعات', expenses_view:'عرض المصروفات', expenses_manage:'إدارة المصروفات', reports_view:'التقارير', settings_manage:'إدارة المستخدمين والإعدادات', backup_manage:'النسخ الاحتياطي'
+};
+const ROLE_PERMS = {
+  admin:Object.keys(PERMISSIONS),
+  sales:['dashboard','clients_view','clients_manage','services_view','invoices_view','invoices_manage','reports_view'],
+  operations:['dashboard','clients_view','clients_manage','services_view'],
+  accountant:['dashboard','clients_view','invoices_view','invoices_manage','expenses_view','expenses_manage','reports_view'],
+  viewer:['dashboard','clients_view','services_view','invoices_view','reports_view'],
+  custom:[]
+};
+const ROLE_NAMES={admin:'مدير',sales:'مبيعات',operations:'تشغيل',accountant:'محاسب',viewer:'مشاهدة فقط',custom:'مخصص'};
+async function hashPassword(password){
+  const data=new TextEncoder().encode(password);
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function normalizeUsers(){
+  if(!Array.isArray(DB.users)) DB.users=[];
+  DB.users=DB.users.map((u,i)=>typeof u==='string'?{id:cid(),name:u,username:'user'+(i+1),role:i===0?'admin':'sales',permissions:null,passwordHash:null}:u);
+  DB.users.forEach((u,i)=>{u.id=u.id||cid();u.username=u.username||('user'+(i+1));u.role=u.role||'sales';if(!('passwordHash' in u))u.passwordHash=null;});
+  // الحساب الأول هو المدير الأساسي، مع كلمة مرور مؤقتة عند الترحيل من النسخة القديمة.
+  if(DB.users.length===0) DB.users.push({id:cid(),name:'المدير',username:'admin',role:'admin',permissions:null,passwordHash:null});
+  if(!DB.users.some(u=>u.role==='admin')) DB.users[0].role='admin';
+  if(!DB.expenses) DB.expenses=[];
+  DB.invoices=(DB.invoices||[]).map(i=>({...i,paid:i.paid!=null?Number(i.paid):((i.status==='paid')?Number(i.total||0):0),currency:i.currency||DB.company.currency}));
+  saveDB(DB);
+}
+function userById(id){return DB.users.find(u=>u.id===id);}
+let currentUserId=sessionStorage.getItem('ribat_user_id')||'';
+let currentUserObj=null;
+let currentUser='';
+function userPerms(u){return (u&&u.permissions&&Array.isArray(u.permissions))?u.permissions:(ROLE_PERMS[u?.role]||[]);}
+function can(permission){return !!currentUserObj && userPerms(currentUserObj).includes(permission);}
+function requirePerm(permission){if(can(permission)) return true; alert('ليس لديك صلاحية لتنفيذ هذا الإجراء'); return false;}
+function renderLogin(){
+  const input=document.getElementById('login-username');
+  if(input && currentUserObj) input.value=currentUserObj.username||'';
+}
+async function loginWithPassword(){
+  const username=document.getElementById('login-username').value.trim();
+  const password=document.getElementById('login-password').value;
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+  if(!username||!password){err.textContent='أدخل اسم المستخدم وكلمة المرور';err.style.display='block';return;}
+  try{
+    const supplied=await hashPassword(password);
+    const res=await fetch(API_BASE+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,passwordHash:supplied})});
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'فشل تسجيل الدخول');
+    SERVER_TOKEN=data.token; sessionStorage.setItem('ribat_server_token',SERVER_TOKEN); SERVER_ONLINE=true;
+    DB=data.state; localStorage.setItem(DB_KEY,JSON.stringify(DB));
+    currentUserId=data.user.id; currentUserObj=data.user; currentUser=data.user.name; sessionStorage.setItem('ribat_user_id',data.user.id);
+    document.getElementById('login-screen').style.display='none'; document.getElementById('app').style.display='block';
+    document.getElementById('side-user-name').textContent=data.user.name; applyNavigationPermissions(); renderAll();
+  }catch(e){
+    err.textContent=e.message==='Failed to fetch'?'تعذر الاتصال بالخادم. تأكد من تشغيل نظام رباط على الخادم.':e.message;
+    err.style.display='block';
+  }
+}
+function pickUser(id){const u=userById(id);if(!u)return;document.getElementById('login-username').value=u.username||'';document.getElementById('login-password').focus();}
+function addUser(){openUserModal();}
+async function logout(){try{if(SERVER_TOKEN) await fetch(API_BASE+'/api/logout',{method:'POST',headers:{'Authorization':'Bearer '+SERVER_TOKEN}});}catch(e){} sessionStorage.removeItem('ribat_user_id');sessionStorage.removeItem('ribat_server_token');SERVER_TOKEN='';currentUserId='';currentUserObj=null;currentUser='';location.reload();}
+normalizeUsers();
+currentUserObj=null;
+renderLogin();
+// إعادة الجلسة من الخادم عند فتح الصفحة
+(async function restoreServerSession(){
+  if(!SERVER_TOKEN) return;
+  try{
+    const res=await fetch(API_BASE+'/api/state',{headers:{'Authorization':'Bearer '+SERVER_TOKEN}});
+    if(!res.ok) throw new Error('session');
+    const data=await res.json(); DB=data.state; currentUserId=data.user.id; currentUserObj=data.user; currentUser=data.user.name;
+    localStorage.setItem(DB_KEY,JSON.stringify(DB)); sessionStorage.setItem('ribat_user_id',currentUserId); SERVER_ONLINE=true;
+    document.getElementById('login-screen').style.display='none'; document.getElementById('app').style.display='block'; document.getElementById('side-user-name').textContent=currentUser;
+    applyNavigationPermissions(); renderAll();
+  }catch(e){ SERVER_TOKEN=''; sessionStorage.removeItem('ribat_server_token'); sessionStorage.removeItem('ribat_user_id'); }
+})();
+
+function applyNavigationPermissions(){
+  const map={dashboard:'dashboard',clients:'clients_view',services:'services_view',invoices:'invoices_view',expenses:'expenses_view',reports:'reports_view',settings:'settings_manage'};
+  document.querySelectorAll('.nav-item').forEach(b=>{const p=map[b.dataset.page];b.style.display=can(p)?'flex':'none';});
+}
+
+/* ============ NAV ============ */
+function goPage(page){
+  const required={dashboard:'dashboard',clients:'clients_view',services:'services_view',invoices:'invoices_view',expenses:'expenses_view',reports:'reports_view',settings:'settings_manage'}[page];
+  if(required&&!can(required)){alert('ليس لديك صلاحية للوصول لهذه الصفحة');return;}
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById('page-'+page).style.display='block';
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+  renderAll();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+
+/* ============ RENDER: DASHBOARD ============ */
+function money(v, cur){ return Number(v||0).toLocaleString('en-US') + ' ' + (cur||DB.company.currency||'USD'); }
+function statusPill(status){
+  const map = {'جديد':'pill-new','قيد المعالجة':'pill-progress','مؤكد':'pill-confirmed','ملغي':'pill-cancelled'};
+  return `<span class="pill ${map[status]||'pill-new'}">${status}</span>`;
+}
+function payPill(status){
+  const map = {paid:['مدفوعة','pill-paid'],partial:['جزئية','pill-partial'],unpaid:['غير مدفوعة','pill-unpaid']};
+  const m = map[status]||map.unpaid;
+  return `<span class="pill ${m[1]}">${m[0]}</span>`;
+}
+
+function renderDashboard(){
+  const totalClients = DB.clients.length;
+  const activeOrders = DB.orders.filter(o=>o.status==='جديد'||o.status==='قيد المعالجة').length;
+  const unpaidInv = DB.invoices.filter(i=>i.status!=='paid').length;
+  const monthRevenue = DB.invoices.reduce((s,i)=>s+Number(i.paid||0),0);
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="stat-label">إجمالي العملاء</div><div class="stat-val">${totalClients}</div><span class="stat-tag pill-new">${DB.orders.length} طلب مسجل</span></div>
+    <div class="stat-card"><div class="stat-label">طلبات نشطة</div><div class="stat-val">${activeOrders}</div><span class="stat-tag pill-progress">قيد المتابعة</span></div>
+    <div class="stat-card"><div class="stat-label">فواتير غير مدفوعة</div><div class="stat-val">${unpaidInv}</div><span class="stat-tag pill-unpaid">تحتاج متابعة</span></div>
+    <div class="stat-card"><div class="stat-label">إجمالي الإيرادات المحصّلة</div><div class="stat-val">${money(monthRevenue)}</div><span class="stat-tag pill-paid">من الفواتير المدفوعة</span></div>
+  `;
+
+  const recent = [...DB.orders].sort((a,b)=>b.createdAt-a.createdAt).slice(0,6);
+  document.getElementById('recent-orders-body').innerHTML = recent.length ? recent.map(o=>{
+    const c = DB.clients.find(c=>c.id===o.clientId);
+    return `<tr><td>${c?c.name:'—'}</td><td>${o.type}</td><td>${o.country}</td><td>${statusPill(o.status)}</td><td>${money(o.price)}</td></tr>`;
+  }).join('') : `<tr><td colspan="5" class="empty">لا يوجد طلبات بعد — ابدأ بإضافة أول طلب</td></tr>`;
+}
+
+/* ============ CLIENTS / ORDERS ============ */
+function refreshClientSelects(){
+  const opts = DB.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('order-client').innerHTML = opts || '<option value="">أضف عميل أولاً</option>';
+  document.getElementById('inv-client').innerHTML = opts || '<option value="">أضف عميل أولاً</option>';
+}
+function openClientModal(existing){ if(!requirePerm('clients_manage')) return;
+  document.getElementById('client-modal-title').textContent = existing ? 'تعديل بيانات العميل' : 'عميل جديد';
+  document.getElementById('client-id').value = existing ? existing.id : '';
+  document.getElementById('client-name').value = existing ? existing.name : '';
+  document.getElementById('client-phone').value = existing ? existing.phone : '';
+  document.getElementById('client-email').value = existing ? existing.email : '';
+  document.getElementById('client-notes').value = existing ? existing.notes : '';
+  openModal('overlay-client');
+}
+function saveClient(){ if(!requirePerm('clients_manage')) return;
+  const name = document.getElementById('client-name').value.trim();
+  if(!name){ alert('اكتب اسم العميل'); return; }
+  const id = document.getElementById('client-id').value;
+  const data = {
+    name, phone: document.getElementById('client-phone').value.trim(),
+    email: document.getElementById('client-email').value.trim(),
+    notes: document.getElementById('client-notes').value.trim(),
+  };
+  if(id){
+    const c = DB.clients.find(c=>c.id===id); Object.assign(c, data);
+  } else {
+    DB.clients.push({id:cid(), createdAt:Date.now(), createdBy:currentUser, ...data});
+  }
+  saveDB(DB); closeModal('overlay-client'); renderAll();
+}
+function openOrderModal(){ if(!requirePerm('clients_manage')) return;
+  if(DB.clients.length===0){ alert('أضف عميل أولاً قبل إنشاء طلب'); openClientModal(); return; }
+  refreshClientSelects();
+  openModal('overlay-order');
+}
+function openOrderEdit(id){
+  if(!requirePerm('clients_manage')) return;
+  const o=DB.orders.find(x=>x.id===id); if(!o) return; refreshClientSelects();
+  document.getElementById('order-modal-title').textContent='تعديل الطلب'; document.getElementById('order-id').value=o.id;
+  document.getElementById('order-client').value=o.clientId; document.getElementById('order-type').value=o.type; document.getElementById('order-country').value=o.country; document.getElementById('order-details').value=o.details||''; document.getElementById('order-price').value=o.price||0; document.getElementById('order-status').value=o.status||'جديد'; openModal('overlay-order');
+}
+function saveOrder(){ if(!requirePerm('clients_manage')) return;
+  const clientId=document.getElementById('order-client').value; if(!clientId){alert('اختر عميل');return;}
+  const id=document.getElementById('order-id').value; const data={clientId,type:document.getElementById('order-type').value,country:document.getElementById('order-country').value,details:document.getElementById('order-details').value.trim(),price:Number(document.getElementById('order-price').value||0),status:document.getElementById('order-status').value};
+  if(id){const o=DB.orders.find(x=>x.id===id);Object.assign(o,data,o?{}:{});o.updatedAt=Date.now();o.updatedBy=currentUserId;}else DB.orders.push({id:cid(),...data,createdAt:Date.now(),createdBy:currentUserId});
+  saveDB(DB); closeModal('overlay-order'); renderAll(); resetOrderModal();
+}
+function resetOrderModal(){document.getElementById('order-id').value='';document.getElementById('order-modal-title').textContent='طلب جديد';document.getElementById('order-details').value='';document.getElementById('order-price').value='';document.getElementById('order-status').value='جديد';}
+
+function deleteOrder(id){ if(!requirePerm('clients_manage')) return;
+  if(!confirm('حذف هذا الطلب؟')) return;
+  DB.orders = DB.orders.filter(o=>o.id!==id); saveDB(DB); renderAll();
+}
+function renderOrders(){
+  const search = (document.getElementById('f-search')?.value||'').toLowerCase();
+  const fType = document.getElementById('f-type')?.value||'';
+  const fCountry = document.getElementById('f-country')?.value||'';
+  const fStatus = document.getElementById('f-status')?.value||'';
+
+  let rows = DB.orders.map(o=>({o, c: DB.clients.find(c=>c.id===o.clientId)}));
+  rows = rows.filter(({o,c})=>{
+    if(fType && o.type!==fType) return false;
+    if(fCountry && o.country!==fCountry) return false;
+    if(fStatus && o.status!==fStatus) return false;
+    if(search && c && !(c.name.toLowerCase().includes(search) || (c.phone||'').includes(search))) return false;
+    return true;
+  }).sort((a,b)=>b.o.createdAt-a.o.createdAt);
+
+  document.getElementById('orders-body').innerHTML = rows.length ? rows.map(({o,c})=>`
+    <tr>
+      <td>${c?c.name:'عميل محذوف'}</td>
+      <td>${c?c.phone||'—':'—'}</td>
+      <td>${o.type}</td>
+      <td>${o.country}</td>
+      <td>${statusPill(o.status)}</td>
+      <td>${money(o.price)}</td>
+      <td class="row-actions">
+        <button class="icon-btn" onclick="openOrderEdit('${o.id}')" title="تعديل">✎</button><button class="icon-btn" onclick="deleteOrder('${o.id}')" title="حذف">✕</button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="7" class="empty">لا يوجد طلبات مطابقة</td></tr>`;
+}
+
+/* ============ SERVICES ============ */
+let activeSvcCat = 'الكل';
+function renderServiceTabs(){
+  const cats = ['الكل','سفر','سياحة','دراسة'];
+  document.getElementById('svc-cat-tabs').innerHTML = cats.map(c=>
+    `<button class="cat-tab ${activeSvcCat===c?'active':''}" onclick="setSvcCat('${c}')">${c}</button>`
+  ).join('');
+}
+function setSvcCat(c){ activeSvcCat=c; renderServices(); }
+function openServiceModal(){ if(!requirePerm('services_manage')) return; openModal('overlay-service'); }
+function saveService(){ if(!requirePerm('services_manage')) return;
+  const name = document.getElementById('svc-name').value.trim();
+  if(!name){ alert('اكتب اسم الخدمة'); return; }
+  DB.services.push({
+    id:cid(), cat: document.getElementById('svc-cat').value,
+    country: document.getElementById('svc-country').value,
+    name, desc: document.getElementById('svc-desc').value.trim(),
+    price: Number(document.getElementById('svc-price').value||0),
+    currency: document.getElementById('svc-currency').value,
+  });
+  saveDB(DB); closeModal('overlay-service'); renderAll();
+  document.getElementById('svc-name').value=''; document.getElementById('svc-desc').value=''; document.getElementById('svc-price').value='';
+}
+function deleteService(id){ if(!requirePerm('services_manage')) return;
+  if(!confirm('حذف هذه الخدمة؟')) return;
+  DB.services = DB.services.filter(s=>s.id!==id); saveDB(DB); renderAll();
+}
+function renderServices(){
+  renderServiceTabs();
+  let list = DB.services;
+  if(activeSvcCat!=='الكل') list = list.filter(s=>s.cat===activeSvcCat);
+  document.getElementById('svc-grid').innerHTML = list.length ? list.map(s=>`
+    <div class="svc-card">
+      <div class="svc-cat">${s.cat} · ${s.country}</div>
+      <div class="svc-name">${s.name}</div>
+      <div class="svc-desc">${s.desc||''}</div>
+      <div class="svc-foot">
+        <div class="svc-price">${s.price} <span>${s.currency}</span></div>
+        <button class="icon-btn" onclick="deleteService('${s.id}')">✕</button>
+      </div>
+    </div>
+  `).join('') : `<div class="empty">لا توجد خدمات في هذا التصنيف</div>`;
+}
+
+/* ============ INVOICES ============ */
+function openInvoiceModal(){ if(!requirePerm('invoices_manage')) return;
+  if(DB.clients.length===0){ alert('أضف عميل أولاً'); openClientModal(); return; }
+  refreshClientSelects();
+  document.getElementById('inv-paid').value='0'; document.getElementById('inv-currency').value=DB.company.currency||'USD';
+  openModal('overlay-invoice');
+}
+function saveInvoice(){ if(!requirePerm('invoices_manage')) return;
+  const clientId = document.getElementById('inv-client').value;
+  if(!clientId){ alert('اختر عميل'); return; }
+  DB.invoices.push({
+    id:cid(), num: 'INV-' + (DB.invoices.length+1001),
+    clientId, desc: document.getElementById('inv-desc').value.trim(),
+    total: Number(document.getElementById('inv-total').value||0),
+    paid: Number(document.getElementById('inv-paid').value||0),
+    currency: document.getElementById('inv-currency').value,
+    status: (Number(document.getElementById('inv-paid').value||0)>=Number(document.getElementById('inv-total').value||0)&&Number(document.getElementById('inv-total').value||0)>0)?'paid':(Number(document.getElementById('inv-paid').value||0)>0?'partial':'unpaid'),
+    date: Date.now(), createdBy: currentUser,
+  });
+  saveDB(DB); closeModal('overlay-invoice'); renderAll();
+  document.getElementById('inv-desc').value=''; document.getElementById('inv-total').value='';
+}
+function cycleInvoiceStatus(id){ if(!requirePerm('invoices_manage')) return;
+  const inv = DB.invoices.find(i=>i.id===id);
+  const order = ['unpaid','partial','paid'];
+  inv.status = order[(order.indexOf(inv.status)+1)%3];
+  if(inv.status==='paid') inv.paid=Number(inv.total||0); else if(inv.status==='unpaid') inv.paid=0; else inv.paid=Math.round(Number(inv.total||0)/2);
+  saveDB(DB); renderAll();
+}
+function deleteInvoice(id){ if(!requirePerm('invoices_manage')) return;
+  if(!confirm('حذف هذه الفاتورة؟')) return;
+  DB.invoices = DB.invoices.filter(i=>i.id!==id); saveDB(DB); renderAll();
+}
+function printInvoice(id){
+  const inv = DB.invoices.find(i=>i.id===id);
+  const c = DB.clients.find(c=>c.id===inv.clientId);
+  document.getElementById('invoice-print').innerHTML = `
+    <div style="font-family:'Tajawal',sans-serif;direction:rtl">
+      <h2 style="color:#2F4BD6;margin-bottom:0">مجموعة رباط الخدمية</h2>
+      <p style="color:#666;margin-top:4px">فاتورة رقم ${inv.num} — ${new Date(inv.date).toLocaleDateString('ar-EG')}</p>
+      <hr>
+      <p><b>العميل:</b> ${c?c.name:'—'}<br><b>الهاتف:</b> ${c?c.phone||'—':'—'}</p>
+      <table style="width:100%;border-collapse:collapse;margin-top:16px">
+        <tr style="border-bottom:2px solid #eee"><th style="text-align:right;padding:8px 0">الوصف</th><th style="text-align:left;padding:8px 0">القيمة</th></tr>
+        <tr><td style="padding:10px 0">${inv.desc||'خدمة'}</td><td style="text-align:left">${money(inv.total,inv.currency)}</td></tr>
+      </table>
+      <p style="margin-top:20px;font-weight:bold">المدفوع: ${money(inv.paid||0,inv.currency)} — المتبقي: ${money(Math.max(0,(inv.total||0)-(inv.paid||0)),inv.currency)}<br>الحالة: ${inv.status==='paid'?'مدفوعة':inv.status==='partial'?'مدفوعة جزئياً':'غير مدفوعة'}</p>
+    </div>`;
+  window.print();
+}
+function renderInvoices(){
+  const rows = [...DB.invoices].sort((a,b)=>b.date-a.date);
+  document.getElementById('invoices-body').innerHTML = rows.length ? rows.map(inv=>{
+    const c = DB.clients.find(c=>c.id===inv.clientId);
+    return `<tr>
+      <td>${inv.num}</td><td>${c?c.name:'—'}</td><td>${inv.desc||'—'}</td><td>${money(inv.total,inv.currency)}<br><small style="color:var(--ink-soft)">مدفوع: ${money(inv.paid||0,inv.currency)} · متبقي: ${money(Math.max(0,(inv.total||0)-(inv.paid||0)),inv.currency)}</small></td>
+      <td><button class="icon-btn" style="padding:0" onclick="cycleInvoiceStatus('${inv.id}')">${payPill(inv.status)}</button></td>
+      <td>${new Date(inv.date).toLocaleDateString('ar-EG')}</td>
+      <td class="row-actions">
+        <button class="icon-btn" onclick="printInvoice('${inv.id}')" title="طباعة">🖨</button>
+        <button class="icon-btn" onclick="deleteInvoice('${inv.id}')" title="حذف">✕</button>
+      </td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7" class="empty">لا يوجد فواتير بعد</td></tr>`;
+}
+
+/* ============ REPORTS ============ */
+function renderReports(){
+  const cats=['سفر','سياحة','دراسة'];
+  const max=Math.max(1,...cats.map(c=>DB.invoices.filter(i=>i.status==='paid' && DB.orders.some(o=>o.clientId===i.clientId&&o.type===c)).reduce((s,i)=>s+Number(i.paid||i.total||0),0)));
+  document.getElementById('report-bars').innerHTML=cats.map(c=>{const val=DB.invoices.filter(i=>i.status==='paid'&&DB.orders.some(o=>o.clientId===i.clientId&&o.type===c)).reduce((s,i)=>s+Number(i.paid||i.total||0),0);const pct=Math.round(val/max*100);return `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px"><span>${c}</span><span>${money(val)}</span></div><div style="background:var(--blue-mist);border-radius:8px;height:12px;overflow:hidden"><div style="width:${pct}%;background:var(--blue);height:100%;border-radius:8px"></div></div></div>`;}).join('');
+  const collected=DB.invoices.reduce((s,i)=>s+Number(i.paid||0),0); const receivable=DB.invoices.reduce((s,i)=>s+Math.max(0,Number(i.total||0)-Number(i.paid||0)),0); const expenses=DB.expenses.reduce((s,e)=>s+Number(e.total||0),0);
+  document.getElementById('report-stats').innerHTML=`<div class="stat-card"><div class="stat-label">إجمالي محصّل</div><div class="stat-val">${money(collected)}</div></div><div class="stat-card"><div class="stat-label">مستحق التحصيل</div><div class="stat-val">${money(receivable)}</div></div><div class="stat-card"><div class="stat-label">إجمالي المصروفات</div><div class="stat-val">${money(expenses)}</div></div><div class="stat-card"><div class="stat-label">صافي الحركة</div><div class="stat-val">${money(collected-expenses)}</div></div>`;
+}
+
+/* ============ EXPENSES ============ */
+function openExpenseModal(){if(!requirePerm('expenses_manage'))return;openModal('overlay-expense');}
+function saveExpense(){if(!requirePerm('expenses_manage'))return;const desc=document.getElementById('exp-desc').value.trim();const total=Number(document.getElementById('exp-total').value||0);if(!desc||total<=0){alert('أدخل البيان والقيمة');return;}DB.expenses.push({id:cid(),desc,cat:document.getElementById('exp-cat').value,total,currency:document.getElementById('exp-currency').value,date:Date.now(),createdBy:currentUserId});saveDB(DB);closeModal('overlay-expense');document.getElementById('exp-desc').value='';document.getElementById('exp-total').value='';renderAll();}
+function deleteExpense(id){if(!requirePerm('expenses_manage'))return;if(!confirm('حذف هذا المصروف؟'))return;DB.expenses=DB.expenses.filter(e=>e.id!==id);saveDB(DB);renderAll();}
+function renderExpenses(){const rows=[...(DB.expenses||[])].sort((a,b)=>b.date-a.date);document.getElementById('expenses-body').innerHTML=rows.length?rows.map(e=>{const u=userById(e.createdBy);return `<tr><td>${e.desc}</td><td>${e.cat}</td><td>${money(e.total,e.currency)}</td><td>${new Date(e.date).toLocaleDateString('ar-EG')}</td><td>${u?u.name:'—'}</td><td><button class="icon-btn danger-text" onclick="deleteExpense('${e.id}')">✕</button></td></tr>`}).join(''):`<tr><td colspan="6" class="empty">لا توجد مصروفات بعد</td></tr>`;}
+
+/* ============ SETTINGS ============ */
+function renderSettings(){
+  document.getElementById('users-list').innerHTML=DB.users.map(u=>`<div class="user-row"><div class="user-meta"><div><strong>${u.name}</strong><span class="role-badge">${ROLE_NAMES[u.role]||'مخصص'}</span></div><small style="color:var(--ink-soft)">@${u.username} · ${userPerms(u).length} صلاحية</small></div><div class="user-actions"><button class="btn btn-ghost btn-sm" onclick="openUserModal('${u.id}')">تعديل</button>${u.id!==currentUserId?`<button class="icon-btn danger-text" onclick="removeUserById('${u.id}')">✕</button>`:''}</div></div>`).join('');
+  document.getElementById('set-company').value=DB.company.name; document.getElementById('set-currency').value=DB.company.currency;
+}
+function openUserModal(id){if(!requirePerm('settings_manage'))return;const u=id?userById(id):null;document.getElementById('user-modal-title').textContent=u?'تعديل مستخدم':'إضافة مستخدم';document.getElementById('user-id').value=u?u.id:'';document.getElementById('user-name').value=u?u.name:'';document.getElementById('user-username').value=u?u.username:'';document.getElementById('user-password').value='';document.getElementById('user-password-note').textContent=u?' (اختياري عند التعديل)':' (مطلوبة)';document.getElementById('user-role').value=u?u.role:'sales';renderPermissionChecks(u?userPerms(u):ROLE_PERMS.sales);openModal('overlay-user');}
+function renderPermissionChecks(selected){document.getElementById('user-perms').innerHTML=Object.entries(PERMISSIONS).map(([key,label])=>`<label class="perm-item"><input type="checkbox" data-perm="${key}" ${selected.includes(key)?'checked':''}> ${label}</label>`).join('');}
+function applyRolePermissions(){const role=document.getElementById('user-role').value;renderPermissionChecks(ROLE_PERMS[role]||[]);}
+async function saveUser(){if(!requirePerm('settings_manage'))return;const id=document.getElementById('user-id').value;const name=document.getElementById('user-name').value.trim();const username=document.getElementById('user-username').value.trim();const password=document.getElementById('user-password').value;const role=document.getElementById('user-role').value;if(!name||!username){alert('أدخل اسم المستخدم واسم الدخول');return;}if(!id&&!password){alert('أدخل كلمة مرور للمستخدم الجديد');return;}if(DB.users.some(u=>(u.username||'').toLowerCase()===username.toLowerCase()&&u.id!==id)){alert('اسم الدخول مستخدم بالفعل');return;}const permissions=[...document.querySelectorAll('#user-perms input:checked')].map(x=>x.dataset.perm);if(id){const u=userById(id);u.name=name;u.username=username;u.role=role;u.permissions=role==='custom'?permissions:null;if(password)u.passwordHash=await hashPassword(password);}else{DB.users.push({id:cid(),name,username,role,permissions:role==='custom'?permissions:null,passwordHash:await hashPassword(password)});}saveDB(DB);closeModal('overlay-user');renderLogin();renderSettings();alert(id?'تم تحديث المستخدم':'تمت إضافة المستخدم');}
+function removeUserById(id){if(!requirePerm('settings_manage'))return;if(DB.users.length<=1){alert('لازم يفضل مستخدم واحد على الأقل');return;}if(!confirm('حذف هذا المستخدم؟'))return;DB.users=DB.users.filter(u=>u.id!==id);saveDB(DB);renderLogin();renderSettings();}
+function saveCompanySettings(){if(!requirePerm('settings_manage'))return;DB.company.name=document.getElementById('set-company').value.trim()||DB.company.name;DB.company.currency=document.getElementById('set-currency').value;saveDB(DB);renderAll();alert('تم الحفظ');}
+function exportData(){if(!requirePerm('backup_manage'))return;const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ribat-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();}
+function importData(e){if(!requirePerm('backup_manage'))return;const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(ev){try{const data=JSON.parse(ev.target.result);if(!confirm('استيراد هذه النسخة هيستبدل كل البيانات الحالية على هذا الجهاز. متأكد؟'))return;DB=data;normalizeUsers();currentUserObj=userById(currentUserId);saveDB(DB);renderAll();renderLogin();alert('تم الاستيراد بنجاح');}catch(err){alert('الملف غير صالح');}};reader.readAsText(file);}
+
+/* ============ MASTER RENDER ============ */
+function renderAll(){
+  refreshClientSelects();
+  renderDashboard();
+  renderOrders();
+  renderServices();
+  renderInvoices();
+  renderExpenses();
+  renderReports();
+  applyNavigationPermissions();
+  renderSettings();
+}
+if(currentUser) renderAll();
+</script>
+</body>
+</html>
