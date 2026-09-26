@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ribat-system
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: RIBAT_DB_PATH
+        value: /var/data/ribat.db
+    disk:
+      name: ribat-data
+      mountPath: /var/data
+      sizeGB: 1
